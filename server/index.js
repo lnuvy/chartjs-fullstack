@@ -1,14 +1,26 @@
 var express = require('express') // express 관련 모듈 불러오기
 var app = express()
 var cors = require('cors') // cors 설정
+var logger = require('morgan')
+var mongoose = require('mongoose')
+require('dotenv').config()
 
 var corsOptions = {
   origin: 'http://localhost:3000',
   credentials: true,
 }
 
+const URL = process.env.REACT_APP_CLOUD
+
+mongoose.connect(URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => console.log("mongoDB connected..."))
+  .catch(e => console.log(`failed to connect! ${e}`))
+
 app.use(cors(corsOptions))
 app.use(express.json()) // 파싱
+app.use(logger('tiny')) // Logger
 
 app.get('/hello', (req, res) => {
   res.send('hello world!')
