@@ -4,8 +4,7 @@ const Corona = require('../../models/Corona')
 
 DataRouter.route('/').get(async (req, res) => {
 
-  const coronas = await Corona.find()
-
+  let coronas = await Corona.find()
   let filtered = null;
 
   if (req.query.start !== undefined) {
@@ -28,7 +27,8 @@ DataRouter.route('/').get(async (req, res) => {
   if (filtered === null) {
     res.json({ status: 200, coronas })
   } else {
-    res.json({ status: 200, filtered })
+    coronas = filtered
+    res.json({ status: 200, coronas })
   }
 
 })

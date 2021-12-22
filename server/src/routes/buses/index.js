@@ -3,21 +3,22 @@ const DataRouter = express.Router()
 const Buse = require('../../models/Buse')
 
 DataRouter.route('/').get(async (req, res) => {
-  const buses = await Buse.find()
-  res.json({ status: 200, buses })
+  let buses = await Buse.find()
+  let filtered = null;
+
+  if (req.query.select !== undefined) {
+    filtered = buses.filter((bus) => {
+      return req.query.select === bus.년월
+    })
+  }
+
+  if (filtered === null) {
+    res.json({ status: 200, buses })
+  } else {
+    buses = filtered
+    res.json({ status: 200, buses })
+  }
+
 })
-
-// DataRouter.route('/test').get(async (req, res) => {
-//   // Buse.findOne({ month: req.params.년월 }, (err, bus) => {
-//   //   if (err) throw err;
-//   //   res.json({ status: 200, bus })
-//   // })
-
-//   Buse.find({ month: req.params.년월 }, (err, bus) => {
-//     if (err) throw err;
-//     res.json({ status: 200, bus })
-//   })
-
-// })
 
 module.exports = DataRouter
